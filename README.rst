@@ -1,0 +1,41 @@
+cnx-query-grammar
+=================
+
+Install
+-------
+
+Use setup.py to install cnx-query-grammar:
+
+::
+
+    $ python setup.py install
+
+This creates a script called ``query_parser``.
+
+Usage
+-----
+
+::
+
+    >>> from cnxquerygrammar.query_parser import grammar, DictFormater
+
+    >>> node_tree = grammar.parse('Some text')
+    >>> DictFormater().visit(node_tree)
+    [('text', 'Some'), ('text', 'text')]
+
+    >>> node_tree = grammar.parse('"A phrase"')
+    >>> DictFormater().visit(node_tree)
+    [('text', 'A phrase')]
+
+    >>> node_tree = grammar.parse('author:"John Smith" type:book')
+    >>> DictFormater().visit(node_tree)
+    [('author', 'John Smith'), ('type', 'book')]
+
+Test
+----
+
+To run the tests:
+
+::
+
+    $ python -m unittest discover

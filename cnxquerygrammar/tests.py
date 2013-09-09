@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import doctest
 import os
 import unittest
 from parsimonious import Grammar
 from parsimonious.nodes import Node, RegexNode
 
+
+doctest.testfile('../README.rst')
 
 here = os.path.abspath(os.path.dirname(__file__))
 QUERY_PEG = os.path.join(here, 'query.peg')

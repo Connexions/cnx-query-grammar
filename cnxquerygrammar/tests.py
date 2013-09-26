@@ -38,12 +38,12 @@ class QueryPEGTestCase(unittest.TestCase):
 
         # Quoted single term matching, should respond the same way as
         #   the simple term matching.
-        text = "'grumble'"
+        text = '"grumble"'
         match_text = text[1:len(text)-1]
         node_tree = gram['quoted_term'].parse(text)
         self.assertEqual(node_tree,
                          Node('quoted_term', text, 0, len(text), children=[
-                             Node('quote', text, 0, 1, children=[Node('', text, 0, 1)]),
+                             Node('quote', text, 0, 1),
                              # Grouping '()' node.
                              Node('', text, 1, 8, children=[
                                  # ZeroOrMore '*' node.
@@ -51,7 +51,7 @@ class QueryPEGTestCase(unittest.TestCase):
                                      RegexNode('term', text, 1, 8),
                                      ]),
                                  ]),
-                             Node('quote', text, 8, 9, children=[Node('', text, 8, 9)])
+                             Node('quote', text, 8, 9),
                              ]),
                          node_tree)
         self.assertEqual(node_tree.children[1].text,
@@ -59,12 +59,12 @@ class QueryPEGTestCase(unittest.TestCase):
 
 
         # Two quoted term matching, should respond as one term value.
-        text = "'grumble wildly'"
+        text = '"grumble wildly"'
         match_text = text[1:len(text)-1]
         node_tree = gram['quoted_term'].parse(text)
         self.assertEqual(node_tree,
                          Node('quoted_term', text, 0, len(text), children=[
-                             Node('quote', text, 0, 1, children=[Node('', text, 0, 1)]),
+                             Node('quote', text, 0, 1),
                              # Grouping '()' node.
                              Node('', text, 1, 15, children=[
                                  # ZeroOrMore '*' nodes.
@@ -78,7 +78,7 @@ class QueryPEGTestCase(unittest.TestCase):
                                      RegexNode('term', text, 9, 15),
                                      ]),
                                  ]),
-                             Node('quote', text, 15, 16, children=[Node('', text, 15, 16)]),
+                             Node('quote', text, 15, 16),
                              ]),
                          node_tree)
         self.assertEqual(node_tree.children[1].text,
@@ -106,7 +106,7 @@ class QueryPEGTestCase(unittest.TestCase):
 
         # Field with quoted terms matching
         value = 'air knob'
-        text = "{}:'{}'".format(field_name, value)
+        text = '{}:"{}"'.format(field_name, value)
         node_tree = gram['field'].parse(text)
         self.assertEqual(node_tree,
                          Node('field', text, 0, 17, children=[
@@ -114,8 +114,7 @@ class QueryPEGTestCase(unittest.TestCase):
                              Node('', text, 6, 7),  # The ':'.
                              Node('', text, 7, 17, children=[
                                  Node('quoted_term', text, 7, 17, children=[
-                                     Node('quote', text, 7, 8, children=[
-                                         Node('', text, 7, 8)]),
+                                     Node('quote', text, 7, 8),
                                      Node('', text, 8, 16, children=[
                                          Node('', text, 8, 11, children=[
                                              RegexNode('term', text, 8, 11)]),
@@ -124,8 +123,7 @@ class QueryPEGTestCase(unittest.TestCase):
                                          Node('', text, 12, 16, children=[
                                              RegexNode('term', text, 12, 16)]),
                                          ]),
-                                     Node('quote', text, 16, 17, children=[
-                                         Node('', text, 16, 17)]),
+                                     Node('quote', text, 16, 17),
                                      ]),
                                  ]),
                              ]),
@@ -199,9 +197,7 @@ class QueryPEGTestCase(unittest.TestCase):
                     Node('expression', text, 0, 19, children=[
                         Node('', text, 0, 19, children=[
                             Node('quoted_term', text, 0, 19, children=[
-                                Node('quote', text, 0, 1, children=[
-                                    Node('', text, 0, 1),
-                                    ]),
+                                Node('quote', text, 0, 1),
                                 Node('', text, 1, 18, children=[
                                     Node('', text, 1, 8, children=[
                                         RegexNode('term', text, 1, 8),
@@ -213,9 +209,7 @@ class QueryPEGTestCase(unittest.TestCase):
                                         RegexNode('term', text, 9, 18),
                                         ]),
                                     ]),
-                                Node('quote', text, 18, 19, children=[
-                                    Node('', text, 18, 19),
-                                    ]),
+                                Node('quote', text, 18, 19),
                                 ]),
                             ]),
                         ]),
@@ -246,3 +240,40 @@ class QueryPEGTestCase(unittest.TestCase):
         self.assertEqual(
             node_tree.children[2].children[0].children[0].children[2].text,
             field_value)
+
+    def test_utf8_term(self):
+        gram = self.grammar
+
+        text = u'你好'
+        node_tree = gram['term'].parse(text)
+        self.assertEqual(node_tree,
+                RegexNode('term', text, 0, len(text)))
+        self.assertEqual(node_tree.match.group(), text)
+
+    def test_punctuations(self):
+        gram = self.grammar
+
+        text = '"hello, name!"'
+        node_tree = gram['quoted_term'].parse(text)
+
+        expected_tree = Node('quoted_term', text, 0, len(text), children=[
+            # "
+            Node('quote', text, 0, 1),
+            Node('', text, 1, 13, children=[
+                # hello,
+                Node('', text, 1, 7, children=[
+                    RegexNode('term', text, 1, 7),
+                    ]),
+                # (space)
+                Node('', text, 7, 8, children=[
+                    RegexNode('space', text, 7, 8),
+                    ]),
+                # name!
+                Node('', text, 8, 13, children=[
+                    RegexNode('term', text, 8, 13),
+                    ]),
+                ]),
+            # "
+            Node('quote', text, 13, 14),
+            ])
+        self.assertEqual(node_tree, expected_tree, node_tree)

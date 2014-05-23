@@ -1,12 +1,12 @@
 cnx-query-grammar
 =================
 
+The Connections project query grammar parsing library.
+
 Install
 -------
 
-Use setup.py to install cnx-query-grammar:
-
-::
+Use setup.py to install cnx-query-grammar::
 
     $ python setup.py install
 
@@ -39,3 +39,10 @@ To run the tests:
 ::
 
     $ python -m unittest discover
+
+License
+-------
+
+This software is subject to the provisions of the GNU Affero General
+Public License Version 3.0 (AGPL). See license.txt for details.
+Copyright (c) 2013 Rice University

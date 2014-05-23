@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
+
 install_requires = (
     'parsimonious',
     )
-description = ''
+description = "Connexions project search query parsing library."
+with open('README.rst', 'r') as fb:
+    readme = fb.read()
+long_description = readme
+
 
 setup(
     name='cnx-query-grammar',
@@ -12,8 +17,9 @@ setup(
     author='Connexions team',
     author_email='info@cnx.org',
     url='https://github.com/connexions/cnx-query-grammar',
-    license='LGPL, See also LICENSE.txt',
+    license='AGPL, See also LICENSE.txt',
     description=description,
+    long_description=long_description,
     packages=find_packages(),
     install_requires=install_requires,
     package_data={

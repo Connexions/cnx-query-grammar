@@ -1,0 +1,12 @@
+0.1
+---
+
+- Allow utf8 character and punctuation to be part of terms [karenc]
+- Change to accept only double quoted values [karenc]
+- Added a commandline utility ``query_parser`` to to build parsed structs
+  [pumazi]
+
+0.0
+---
+
+- Initialized project [pumazi]

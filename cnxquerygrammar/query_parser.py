@@ -34,7 +34,12 @@ class DictFormater(NodeVisitor):
 
     def visit_quoted_term(self, node, visited_children):
         """Quoted terms are text that shouldn't be separated"""
-        return ('text', node.children[1].text,)
+        termtexts = []
+        for child in visited_children:
+            if child: # Non-empty child is a list of all terms
+                for term in child:
+                    termtexts.append(term[0][1])
+        return ('text', ' '.join(termtexts))
 
     def visit_term(self, node, visited_children):
         """terms are standalone text values."""

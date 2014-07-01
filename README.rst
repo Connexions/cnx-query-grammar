@@ -31,6 +31,10 @@ Usage
     >>> DictFormater().visit(node_tree)
     [('author', 'John Smith'), ('type', 'book')]
 
+    >>> node_tree = grammar.parse('author:"John Smith" type:book title:" A Title   With Spaces"')
+    >>> DictFormater().visit(node_tree)
+    [('author', 'John Smith'), ('type', 'book'), ('title', 'A Title With Spaces')]
+
 Test
 ----
 

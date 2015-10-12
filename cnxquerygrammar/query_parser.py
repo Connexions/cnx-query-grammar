@@ -16,7 +16,7 @@ class DictFormater(NodeVisitor):
     """Translates a node tree to a dictionary"""
 
     def visit_query(self, node, visited_children):
-        return [ x[0] for x in visited_children if x ]
+        return [x[0] for x in visited_children if x]
 
     def visit_expression(self, node, visited_children):
         if node.children[0].expr_name == 'field':
@@ -36,7 +36,7 @@ class DictFormater(NodeVisitor):
         """Quoted terms are text that shouldn't be separated"""
         termtexts = []
         for child in visited_children:
-            if child: # Non-empty child is a list of all terms
+            if child:  # Non-empty child is a list of all terms
                 for term in child:
                     termtexts.append(term[0][1])
         return ('text', ' '.join(termtexts))
@@ -46,7 +46,7 @@ class DictFormater(NodeVisitor):
         return ('text', node.text,)
 
     def generic_visit(self, node, visited_children):
-        return [ x for x in visited_children if x ]
+        return [x for x in visited_children if x]
 
 
 def main(argv=None):

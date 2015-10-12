@@ -55,8 +55,7 @@ class QueryPEGTestCase(unittest.TestCase):
                              ]),
                          node_tree)
         self.assertEqual(node_tree.children[1].text,
-            match_text)
-
+                         match_text)
 
         # Two quoted term matching, should respond as one term value.
         text = '"grumble wildly"'
@@ -119,7 +118,8 @@ class QueryPEGTestCase(unittest.TestCase):
                                          Node('', text, 8, 11, children=[
                                              RegexNode('term', text, 8, 11)]),
                                          Node('', text, 11, 12, children=[
-                                             RegexNode('space', text, 11, 12)]),
+                                             RegexNode('space', text, 11, 12)
+                                             ]),
                                          Node('', text, 12, 16, children=[
                                              RegexNode('term', text, 12, 16)]),
                                          ]),
@@ -183,7 +183,7 @@ class QueryPEGTestCase(unittest.TestCase):
                          text_values[2])  # 'chemistry'
         self.assertEqual(
             node_tree.children[4].children[0].children[0].children[2].text,
-                         field_value)
+            field_value)
 
         # Combined expressions with quoted terms matching
         field_value = 'book'
@@ -234,7 +234,8 @@ class QueryPEGTestCase(unittest.TestCase):
                          node_tree)
         # Match 'organic chemistry'
         self.assertEqual(
-            node_tree.children[0].children[0].children[0].children[0].children[1].text,
+            node_tree.children[0].children[0].children[0].children[0]
+            .children[1].text,
             text_values[0][1:len(text_values[0])-1])
         # Match 'book'
         self.assertEqual(
@@ -247,7 +248,7 @@ class QueryPEGTestCase(unittest.TestCase):
         text = u'你好'
         node_tree = gram['term'].parse(text)
         self.assertEqual(node_tree,
-                RegexNode('term', text, 0, len(text)))
+                         RegexNode('term', text, 0, len(text)))
         self.assertEqual(node_tree.match.group(), text)
 
     def test_punctuations(self):

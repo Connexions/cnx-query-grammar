@@ -2,8 +2,12 @@ language: python
 python:
   - "2.7"
 sudo: false
+before_install:
+  - pip install pep8
 install:
   - python setup.py install
+before_script:
+  - pep8 *.py cnxquerygrammar/
 script:
   - python -m unittest discover
 notifications:

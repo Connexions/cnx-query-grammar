@@ -13,7 +13,7 @@ long_description = readme
 
 setup(
     name='cnx-query-grammar',
-    version='0.2.1',
+    version='0.2.2',
     author='Connexions team',
     author_email='info@cnx.org',
     url='https://github.com/connexions/cnx-query-grammar',
